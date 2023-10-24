@@ -9,26 +9,15 @@ https://ruvnet.github.io/openai-cost-estimator
 
 This document aims to provide a structured approach to estimating the costs associated with using OpenAI's GPT models in an enterprise setting. It covers various factors and formulas to offer a comprehensive view of potential costs.
 
-## Table of Contents
-
-- [Understanding Token Costs](#understanding-token-costs)
-- [Deployment Costs](#deployment-costs)
-- [Fine-tuning Costs](#fine-tuning-costs)
-- [Ongoing Interaction Costs](#ongoing-interaction-costs)
-- [Additional Considerations](#additional-considerations)
-
----
-
 ### Understanding Token Costs
 
 The primary driver for costs in OpenAI deployments is token usage. Tokens can be as short as one character or as long as one word. Costs are incurred for both input and output tokens.
 
 **Formula:**
 
-\[
-\text{Total Token Cost} = (\text{Input Tokens} + \text{Output Tokens}) \times \text{Cost per Token}
-\]
-
+```
+Total Token Cost = (Input Tokens + Output Tokens) x Cost per Token
+```
 ---
 
 ### Deployment Costs
@@ -37,9 +26,9 @@ Deploying the GPT-4 API, for instance, involves costs based on the number of req
 
 **Formula:**
 
-\[
-\text{Deployment Cost} = \text{Requests per Day} \times \text{Days per Month} \times (\text{Average Input Tokens per Request} + \text{Average Output Tokens per Request}) \times \text{Cost per Token}
-\]
+```
+Deployment Cost = Requests per Day x Days per Month x (Average Input Tokens per Request + Average Output Tokens per Request) x Cost per Token
+```
 
 ---
 
@@ -48,14 +37,12 @@ Deploying the GPT-4 API, for instance, involves costs based on the number of req
 Fine-tuning GPT-3.5 with your specific data involves a one-time training cost and ongoing usage costs for input/output tokens.
 
 **Formula:**
-
-\[
-\text{Training Cost} = \text{Dataset Size} \times \text{Training Epochs} \times \text{Cost per Token for Training}
-\]
-
-\[
-\text{Monthly Usage Cost} = (\text{Daily Input Tokens} + \text{Daily Output Tokens}) \times \text{Days of Operation per Month} \times \text{Cost per Token for Usage}
-\]
+```
+Training Cost = Dataset Size x Training Epochs x Cost per Token for Training
+```
+```
+Monthly Usage Cost = (Daily Input Tokens + Daily Output Tokens) x Days of Operation per Month x Cost per Token for Usage
+```
 
 ---
 
@@ -65,9 +52,9 @@ For applications requiring continuous interaction with the GPT API (intelligent 
 
 **Formula:**
 
-\[
-\text{Ongoing Interaction Cost} = \text{Number of Applications} \times \text{Frequency of Interaction} \times \text{Average Tokens per Interaction} \times \text{Cost per Token}
-\]
+```
+Ongoing Interaction Cost = Number of Applications x Frequency of Interaction x Average Tokens per Interaction x Cost per Token
+```
 
 ---
 
