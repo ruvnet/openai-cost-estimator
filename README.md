@@ -1,6 +1,9 @@
 # GPT API Cost Estimation for Enterprises
 
-_By rUv, CTO Generative AI, EY Americas_
+_By rUv, CTO Generative AI, EY Americas
+
+## HTML OpenAi Cost Estimator
+https://ruvnet.github.io/openai-cost-estimator
 
 ## Purpose
 
