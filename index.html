@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GPT-4 API Cost Estimation</title>
+
+ <!-- 
+        OpenAi Cost Estimator
+         /\__/\   - index.html 
+        ( o.o  )  - v0.0.1
+          >^<     - by @rUv
+-->
+  
+    <style>
+         body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        p {
+            background: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            border-radius: 4px;
+        }
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+        }
+        .tab button:hover {
+            background-color: #ddd;
+        }
+        .tab button.active {
+            background-color: #ccc;
+        }
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+	.tab button.active {
+            background-color: #ccc;
+        }
+    </style>
+    <script>
+
+        function updateTokenCosts() {
+            const selectedModel = document.getElementById("modelSelector").value;
+            let inputCost, outputCost;
+            if (selectedModel === 'GPT3.5') {
+                inputCost = 0.002;
+                outputCost = 0.002;
+            } else if (selectedModel === 'GPT4-8K') {
+                inputCost = 0.03;
+                outputCost = 0.06;
+            } else if (selectedModel === 'GPT4-32K') {
+                inputCost = 0.06;
+                outputCost = 0.12;
+            }
+            document.getElementById("costPerTokenInput").value = inputCost;
+            document.getElementById("costPerTokenOutput").value = outputCost;
+            document.getElementById("costPerToken").value = (inputCost + outputCost) / 2;  // Updating the cost per token
+            calculate();
+        }
+        function calculate() {
+            // Token Costs
+            const inputTokens = parseFloat(document.getElementById("inputTokens").value);
+            const outputTokens = parseFloat(document.getElementById("outputTokens").value);
+            const costPerToken = parseFloat(document.getElementById("costPerToken").value);
+            const totalTokenCost = (inputTokens + outputTokens) * costPerToken;
+            document.getElementById("totalTokenCost").innerText = "Total Token Cost: $" + totalTokenCost.toFixed(2);
+
+            // Deployment Costs
+            const requestsPerDay = parseFloat(document.getElementById("requestsPerDay").value);
+            const daysPerMonth = parseFloat(document.getElementById("daysPerMonth").value);
+            const avgInputTokens = parseFloat(document.getElementById("avgInputTokens").value);
+            const avgOutputTokens = parseFloat(document.getElementById("avgOutputTokens").value);
+            const deploymentCost = requestsPerDay * daysPerMonth * (avgInputTokens + avgOutputTokens) * costPerToken;
+            document.getElementById("deploymentCost").innerText = "Deployment Cost: $" + deploymentCost.toFixed(2);
+
+            // Fine-tuning Costs
+            const datasetSize = parseFloat(document.getElementById("datasetSize").value);
+            const trainingEpochs = parseFloat(document.getElementById("trainingEpochs").value);
+            const costPerTokenTraining = parseFloat(document.getElementById("costPerTokenTraining").value);
+            const trainingCost = datasetSize * trainingEpochs * costPerTokenTraining;
+            const dailyInputTokens = parseFloat(document.getElementById("dailyInputTokens").value);
+            const dailyOutputTokens = parseFloat(document.getElementById("dailyOutputTokens").value);
+            const daysOperationPerMonth = parseFloat(document.getElementById("daysOperationPerMonth").value);
+            const costPerTokenUsage = parseFloat(document.getElementById("costPerTokenUsage").value);
+            const monthlyUsageCost = (dailyInputTokens + dailyOutputTokens) * daysOperationPerMonth * costPerTokenUsage;
+            document.getElementById("fineTuningCost").innerText = "Training Cost: $" + trainingCost.toFixed(2) + ", Monthly Usage Cost: $" + monthlyUsageCost.toFixed(2);
+        }
+	 function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+         window.onload = function() {
+            updateTokenCosts();
+            calculate();
+        };
+    </script>
+</head>
+<body onload="updateTokenCosts(); calculate();">
+    <h1>GPT-4 API Cost Estimation</h1>
+    <form oninput="calculate()">
+        <!-- Model selector is here, visible for all tabs -->
+        Select Model:
+        <select id="modelSelector" onchange="updateTokenCosts()">
+            <option value="GPT3.5">GPT-3.5 Turbo (4K)</option>
+            <option value="GPT4-8K">GPT-4 (8K)</option>
+            <option value="GPT4-32K">GPT-4 (32K)</option>
+        </select><br>
+        Cost per 1K Tokens (Input): <input type="number" id="costPerTokenInput" value="0.002" readonly style="margin-right:20px;"><br>
+        Cost per 1K Tokens (Output): <input type="number" id="costPerTokenOutput" value="0.002" readonly style="margin-right:20px;"><br>
+    </form>
+    <!-- Tab buttons -->
+    <div class="tab" style="margin-top:20px;">
+        <button class="tablinks" onclick="openTab(event, 'TokenCosts')" id="defaultOpen">Token Costs</button>
+        <button class="tablinks" onclick="openTab(event, 'DeploymentCosts')">Deployment Costs</button>
+        <button class="tablinks" onclick="openTab(event, 'FineTuningCosts')">Fine-tuning Costs</button>
+    </div>
+    <!-- Token Costs Tab -->
+    <div id="TokenCosts" class="tabcontent" style="margin-top:0px;">
+        <h2>Understanding Token Costs</h2>
+        <form oninput="calculate()">
+            Input Tokens: <input type="number" id="inputTokens" value="1000" style="margin-right:0px;"><br>
+            Output Tokens: <input type="number" id="outputTokens" value="1000" style="margin-right:20px;"><br>
+            Cost per Token: <input type="number" id="costPerToken" value="0.01" step="0.001" style="margin-right:20px;"><br>
+            <p id="totalTokenCost">Total Token Cost: $0.00</p>
+        </form>
+    </div>
+    <!-- Deployment Costs Tab -->
+    <div id="DeploymentCosts" class="tabcontent" style="margin-top:0px;">
+        <h2>Deployment Costs</h2>
+        <form oninput="calculate()">
+            Requests per Day: <input type="number" id="requestsPerDay" value="1000" style="margin-right:20px;"><br>
+            Days per Month: <input type="number" id="daysPerMonth" value="30" style="margin-right:20px;"><br>
+            Average Input Tokens per Request: <input type="number" id="avgInputTokens" value="10" style="margin-right:20px;"><br>
+            Average Output Tokens per Request: <input type="number" id="avgOutputTokens" value="10" style="margin-right:20px;"><br>
+            <p id="deploymentCost">Deployment Cost: $0.00</p>
+        </form>
+    </div>
+    <!-- Fine-tuning Costs Tab -->
+    <div id="FineTuningCosts" class="tabcontent" style="margin-top:0px;">
+        <h2>Fine-tuning Costs</h2>
+        <form oninput="calculate()">
+            <p>Only GPT-3.5 Turbo supports fine-tuning</p>
+            Dataset Size: <input type="number" id="datasetSize" value="100000" style="margin-right:20px;"><br>
+            Training Epochs: <input type="number" id="trainingEpochs" value="5" style="margin-right:20px;"><br>
+            Cost per Token for Training: <input type="number" id="costPerTokenTraining" value="0.02" step="0.001" style="margin-right:20px;"><br>
+            Daily Input Tokens: <input type="number" id="dailyInputTokens" value="2000" style="margin-right:20px;"><br>
+            Daily Output Tokens: <input type="number" id="dailyOutputTokens" value="2000" style="margin-right:20px;"><br>
+            Days of Operation per Month: <input type="number" id="daysOperationPerMonth" value="30" style="margin-right:20px;"><br>
+            Cost per Token for Usage: <input type="number" id="costPerTokenUsage" value="0.01" step="0.001" style="margin-right:20px;"><br>
+            <p id="fineTuningCost">Training Cost: $0.00, Monthly Usage Cost: $0.00</p>
+        </form>
+    </div>
+    <script>
+        // Existing JavaScript for calculation and tab functionality
+        document.getElementById("defaultOpen").click();
+    </script>
+</body>
+</html>
